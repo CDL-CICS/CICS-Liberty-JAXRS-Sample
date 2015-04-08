@@ -1,0 +1,368 @@
+#######################################################################
+# JVM profile: DFHWLP                                                 #
+#                                                                     #
+#   This sample CICS JVM profile is for a Liberty JVM server.         #
+#   The JVM server contains a configured instance of a web container  #
+#   that is based on the Liberty profile technology.                  #
+#######################################################################
+#                                                                     #
+# Licensed Materials - Property of IBM                                #
+#                                                                     #
+# 5655-Y04  CICS Transaction Server                                   #  
+#                                                                     #
+# (c) Copyright IBM Corporation 2012, 2014 All Rights Reserved        #
+# US Government Users Restricted Rights - Use, duplication            #
+# or disclosure restricted by GSA ADP Schedule Contract               #
+# with IBM Corporation                                                #
+#                                                                     #
+#######################################################################
+#
+#                         Symbol Substitution
+#                         -------------------
+#
+# The following substitutions are supported:
+#   &USSHOME;    => The value of the USSHOME SIT parameter.
+#   &CONFIGROOT; => the location of configuration files, such as the 
+#                   JVM profile.
+#   &APPLID;     => The applid of the CICS region.
+#   &JVMSERVER;  => The name of the JVMSERVER resource.
+#   &DATE;       => Date the JVMSERVER is enabled.  Dyymmdd
+#   &TIME;       => Time the JVMSERVER is enabled.  Thhmmss
+#
+# All variables must be delimited with & and ;
+# Using substitutions means that you can use the same profile
+# for multiple regions and still have unique working directories
+# and output destinations for each region.
+#
+# With this substitution
+#     ENV_VAR=myvar.&APPLID;.&JVMSERVER;.data
+# becomes
+#     ENV_VAR=myvar.ABCDEF.JSERVER1.data
+# for a JVMSERVER resource with the name JSERVER1 in a CICS region 
+# with applid ABCDEF.
+#
+# Note: The continuation character for use with JVMProfiles is '\'.
+#**********************************************************************
+#
+#                         Required parameters
+#                         -------------------
+#
+# JAVA_HOME specifies the location of the Java directory.
+#
+JAVA_HOME=/java/java71_bit64_sr2/J7.1_64
+#
+# Set the current working directory. If this environment variable is
+# set, a change to the specified directory is issued before the JVM
+# is initialized, and the STDIN, STDOUT and STDERR streams are
+# allocated to this directory.
+# If you do not specify this option, the current working directory is
+# left unchanged and the STDIN, STDOUT and STDERR streams are allocated
+# to the /tmp directory.
+#
+WORK_DIR=/u/cntest6/workdir
+#
+# Specify any directories that contain DLLs required at run time. For
+# example to use the IBM DB2 Driver for JDBC and SQLJ in a non-Liberty
+# environment, add the directory containing the native DLLs to the 
+# LIBPATH_SUFFIX option.
+# See the "Application Programming Guide and Reference for Java" 
+# relevant to the level of DB2 being used.
+#
+#LIBPATH_SUFFIX=
+#
+#**********************************************************************
+#
+#                    JVM server parameters
+#                    ---------------------
+#
+# This option is used to specify, in seconds, how long the OSGi
+# framework initialization and termination is allowed to run 
+# before being timed out.
+# The specified value must be in the range 1-60000. If it falls
+# outside of this range then it will default to 60. If the
+# initialization exceeds the limit, the JVM server fails to initialize.
+#
+#OSGI_FRAMEWORK_TIMEOUT=60
+#
+#**********************************************************************
+#
+#                       Liberty JVM server
+#                       ------------------
+#
+# To enable the Web Container support. Set a unique port (below) 
+# and set WLP_INSTALL_DIR to the location of WebSphere Application 
+# Server Liberty profile in the root directory of the CICS 
+# installation on z/OS UNIX.
+# This will always be &USSHOME;/wlp
+#
+WLP_INSTALL_DIR=&USSHOME;/wlp
+#
+# WLP_USER_DIR is a WebSphere Application Server Liberty profile 
+# environment variable used to define the user/custom configuration 
+# directory used to store shared and server-specific configuration. 
+# A server's configuration is at...
+# ${WLP_USER_DIR}/servers/defaultServer
+# If unset in the JVM profile, CICS will set it internally to 
+# ${WORK_DIR}/&APPLID;/&JVMSERVER;/wlp/usr
+#
+#WLP_USER_DIR=./&APPLID;/&JVMSERVER;/wlp/usr
+#
+# WLP_OUTPUT_DIR is used by WebSphere Application Server Liberty profile 
+# to define the directory containing output files for defined servers. 
+# By default, WebSphere Application Server Liberty profile stores a 
+# server's output logs and workarea are in the 
+# ${WLP_USER_DIR}/servers/defaultServer 
+# directory, alongside configuration and applications. If this variable 
+# is set, the output logs and workarea would be stored in...
+# ${WLP_OUTPUT_DIR}/defaultServer
+# If unset in the JVM profile, CICS will set it internally to the 
+# default value.
+#
+# If the following value is used and the server is named defaultServer, the 
+# output will be written to: 
+# ./&APPLID;/&JVMSERVER;/wlp/usr/servers/defaultServer 
+#
+# The com.ibm.cics.jvmserver.wlp.autoconfigure Java property is used by CICS 
+# to automatically create and configure the
+# WebSphere Application Server Liberty profile server. When this property is
+# set to true, CICS will:
+# - Create a WebSphere Application Server Liberty profile server if one 
+#   doesn't exist
+# - Add the required CICS Liberty feature to server.xml
+# - Add the CICS Security feature to server.xml when CICS External Security
+#   is enabled
+# - Add the SSL feature if an HTTPS port has been specified
+# - Set the server host, HTTP and HTTPS values if supplied in the JVM 
+#   profile
+# When the property is set to false, CICS will expect a configured server.xml
+# to be present in WLP_USER_DIR.
+# In general you should set com.ibm.cics.jvmserver.wlp.autoconfigure to 
+# false in a production CICS environment.  The default value is false
+#
+-Dcom.ibm.cics.jvmserver.wlp.autoconfigure=true
+#
+# The com.ibm.cics.jvmserver.wlp.server.host Java property is used by CICS 
+# to configure the host name used for HTTP requests to the web server. 
+# The default value is *. If unset in the JVM profile, CICS will set it 
+# to the WebSphere Application Server Liberty profile default value of *.
+# The value specifies which host(s) the 
+# WebSphere Application Server Liberty profile server will accept 
+# requests from, this sample demonstrates requests accepted from any 
+# host. Good practice would be to limit this to a specific host name. 
+# NOTE: The server will only be updated with the value of this property
+#       when com.ibm.cics.jvmserver.wlp.autoconfigure=true
+#
+#-Dcom.ibm.cics.jvmserver.wlp.server.host=*
+#
+# The com.ibm.cics.jvmserver.wlp.server.http.port Java property is used by CICS
+# to configure the port used for HTTP requests to the web server. 
+# The default value is 9080. If unset in the JVM profile, CICS will set it 
+# to the WebSphere Application Server Liberty profile default value.
+# In general you should not accept this default, instead set it to 
+# a free port number on your z/OS system. Note, WLP does not use CICS
+# TCPIPServices, so you should take care not to use any port in use by
+# a CICS TCPIPService (or elsewhere). 
+# NOTE: The server will only be updated with the value of this property
+#       when com.ibm.cics.jvmserver.wlp.autoconfigure=true
+#
+-Dcom.ibm.cics.jvmserver.wlp.server.http.port=30081
+#
+# The com.ibm.cics.jvmserver.wlp.server.https.port Java property is used by CICS
+# to configure the port used for HTTPS requests to the web server.
+# The default value is 9443. If unset in the JVM profile, CICS will set it 
+# to the WebSphere Application Server Liberty profile default value. 
+# As above, you should ensure you set this to a free port number in your
+# z/OS installation. 
+# NOTE: The server will only be updated with the value of this property
+#       when com.ibm.cics.jvmserver.wlp.autoconfigure=true
+# 
+-Dcom.ibm.cics.jvmserver.wlp.server.https.port=30082
+#
+# NOTE: If any of the com.ibm.cics.jvmserver.wlp.server.host, 
+#       com.ibm.cics.jvmserver.wlp.server.http.port or 
+#       com.ibm.cics.jvmserver.wlp.server.https.port Java properties are 
+#       supplied, CICS will update all values to the supplied or default
+#       value.  If none of the com.ibm.cics.jvmserver.wlp.server.host, 
+#       com.ibm.cics.jvmserver.wlp.server.http.port or 
+#       com.ibm.cics.jvmserver.wlp.server.https.port Java properties are
+#       supplied or com.ibm.cics.jvmserver.wlp.autoconfigure=false (the
+#       default) CICS will not update any of the values.
+#
+# If your Web application serves static resources (e.g. .jpg, .gif, 
+# .ico, .bmp, .css, etc) - then using this property will ensure requests   
+# for those resources are handled by an internal thread, rather than a   
+# more resource intensive CICS enabled thread. Use of this option  
+# requires that your dynamic resources do not use these standard static 
+# extensions. 
+# 
+#-Dcom.ibm.cics.jvmserver.wlp.optimize.static.resources=true
+#
+# The com.ibm.ws.logging.console.log.level property controls which 
+# messages Liberty writes to the JVM server stdout file. The property
+# is set to OFF by CICS. If you want Liberty console messages written
+# to the JVM server stdout file, the proeprty can be set to INFO, AUDIT,
+# WARNING, or ERROR.
+#
+# NOTE: Liberty console messages are also written to the Liberty 
+#       messages.log independent of the setting of this property.
+#
+#-Dcom.ibm.ws.logging.console.log.level=OFF
+#
+#               Liberty JVM server -  Service/Tracing
+#               -------------------------------------
+#
+# Uncomment this option if IBM Service request a Liberty Profile trace.
+# With this setting, the Liberty server will produce a trace.log file 
+# located in the WLP_OUTPUT_DIR location. Further trace options are 
+# available in the Liberty information center. 
+# *DO NOT* use this option under 'normal' operation of your JVM server -
+# it will use incur extra CPU and I/O cost.
+#
+#-Dcom.ibm.ws.logging.trace.specification=*=all=enabled
+#
+#**********************************************************************
+#
+#                         Output redirection
+#                         ------------------
+#
+# STDOUT, STDERR, STDIN, and JVMTRACE are allocated with file names
+# beginning with &APPLID;.&JVMSERVER;. You can specify different file
+# names using the STDOUT, STDERR, STDIN, and JVMTRACE environment
+# variables.
+#
+# The default file name for JVMTRACE is dfhjvmtrc.
+# To send the output to somewhere other than a file, specify a user
+# output redirection class. CICS provides a sample that demonstrates
+# this capability. JVMTRACE cannot be redirected.
+#
+# Under an OSGi environment, use this setting in conjuction with the
+# information provided in the CICS Information Center. 
+# See 'Writing Java classes to redirect JVM stdout and stderr output'
+#
+#USEROUTPUTCLASS=com.ibm.cics.samples.SJMergedStream
+#
+#**********************************************************************
+#
+#                             JVM options
+#                             -----------
+#
+# See "IBM SDK for z/OS platforms, Java Technology Edition, SDK Guide"
+# or "IBM Developer Kit and Runtime Environment, Java Technology
+# Edition, Diagnostics Guide" for information on all JVM options.
+#
+# JVM options which print output and then exit must not be specified
+# because they will cause the creation of the JVM to fail. These
+# options include: -version, -help, -?, -assert and -X.
+#
+# This option lists the dump settings currently in effect to stderr
+#-Xdump:what
+#
+# This takes a javacore, heapdump, and z/OS dump when an OutOfMemoryError occurs. 
+#-Xdump:java+heap+system:events=systhrow,filter=java/lang/OutOfMemoryError
+#
+# This option prints the java stack of any thread which allocates an object 
+# greater than 5MB in size. (useful for identifying misbehaving code)
+#-Xdump:stack:events=allocation,filter=#5m
+#
+#
+# Use the following options to tune the JVM.
+# -Xms    Initial Java heap size, for example -Xms64M
+# -Xmx    Maximum Java heap size, for example -Xmx512M
+# -Xmso   Initial stack size for native threads (default -Xmso256KB)
+#
+# The following JVM options are a generic set of values.
+# You can perform workload analysis and provide different values that are
+# more suited to your specific workload.
+-Xms128M
+-Xmx256M
+-Xmso128K
+#
+# The -Xgcthreads option sets the maximum number of helper threads
+# allowed for garbage collection. If you do not specify this option,
+# the default is set to (the number of CPUs - 1).
+#
+#-Xgcthreads4
+#
+# The following option sets the Garbage collection Policy.
+#
+-Xgcpolicy:gencon
+#
+# Verbose logging may help diagnose garbage collector problems
+#-verbose:gc
+#
+# This option can be used for tracing classloading problems
+#-Dibm.cl.verbose=package/class
+#
+# Recommended checking for Development or Test systems with JNI code
+#-Xcheck:jni
+#
+# The following option enables the "aggressive" level of Just-In-Time 
+# (JIT) optimization, exploiting the latest hardware optimizations 
+# available from the IBM 64-bit SDK for z/OS, Java Technology Edition.
+#
+#-Xaggressive
+#
+# Note: The CICS JVM server disables the JIT compiler resumable trap 
+# handler by default to avoid conflicts on certain hardware. However, 
+# this setting might be inadvertently reversed by specifying JIT 
+# options in the JVM profile. If you specify JIT options, you must 
+# include the keyword "noResumableTrapHandler".
+#
+# Using a shared class cache
+# --------------------------
+# JVM servers within the same z/OS LPAR can make use of a common Java
+# shared class cache. This reduces the overall virtual storage 
+# consumption, improves JITing and reduces JVM startup time. The
+# following options create a 64MB shared cache which can be accessed
+# by all CICS regions in the same RACF group.
+# -Xscmx64M
+# -Xshareclasses:name=cicsts510%g,groupAccess,nonfatal
+#
+#**********************************************************************
+#
+#                 Setting JVM system properties
+#                 -----------------------------
+#
+# Specify JVM system properties for a JVM server if required.
+# Properties are key name and value pairs that
+# contain basic information about the JVM and its environment. They are
+# always prefixed with -D. For example:
+#
+# -Dcom.ibm.cics.some.property=some_value
+#
+# The following option disables the Java Attach API. For further
+# information about enabling the Java Attach API, see
+# http://www-01.ibm.com/support/docview.wss?uid=swg21407964.
+#
+-Dcom.ibm.tools.attach.enable=no
+#
+# WebSphere Application Server Liberty profile is only supported when
+# running under a JVM with the UTF-8 or ISO-8859-1 character encodings.
+# The Java System Property file.encoding is set appropriately.
+#
+-Dfile.encoding=ISO-8859-1
+#
+# To set the console.encoding of the JVM use the following Java System
+# Property. This will influence the encoding in which console files
+# such as dfhjvmout, dfhjvmerr and dfhjvmtrc are written.
+#
+#-Dconsole.encoding=ISO-8859-1
+#
+#**********************************************************************
+#
+#              Unix System Services Environment Variables
+#              ------------------------------------------
+#
+# See "IBM SDK for z/OS platforms, Java Technology Edition, SDK Guide"
+# or "IBM Developer Kit and Runtime Environment, Java Technology
+# Edition, Diagnostics Guide" for information on all JVM options.
+#
+# Specify where JVM dumps are written to
+#
+#JAVA_DUMP_TDUMP_PATTERN=DUMP.&APPLID;.&JVMSERVER;.D%y%m%d.T%H%M%S                  
+#
+# Specify the local time zone in which the JVM will run.
+# Note: this value does not influence the &DATE; and &TIME; variables.
+#
+#TZ=CET-1CEST,M3.5.0,M10.5.0
+#

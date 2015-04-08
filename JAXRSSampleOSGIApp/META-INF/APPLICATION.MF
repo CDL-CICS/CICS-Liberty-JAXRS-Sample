@@ -1,0 +1,7 @@
+Application-Name: JAXRSSampleOSGIApp
+Application-SymbolicName: JAXRSSampleOSGIApp
+Application-ManifestVersion: 1.0
+Application-Version: 1.0.0.qualifier
+Manifest-Version: 1.0
+Application-Content: JAXRSSampleOSGIWeb;version="1.0.0"
+

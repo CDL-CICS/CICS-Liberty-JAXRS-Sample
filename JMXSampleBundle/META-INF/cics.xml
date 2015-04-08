@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<manifest xmlns="http://www.ibm.com/xmlns/prod/cics/bundle" id="JMXSampleBundle" bundleMajorVer="1" bundleMinorVer="0" bundleMicroVer="0" bundleVersion="1" bundleRelease="0" build="IntA-201404222146">
+    <meta_directives>
+        <timestamp>2015-03-31T15:28:40.631+08:00</timestamp>
+    </meta_directives>
+    <define name="LIBJVM" type="http://www.ibm.com/xmlns/prod/cics/bundle/JVMSERVER" path="LIBJVM.jvmserver"/>
+    <define name="JMXSampleOSGIApp" type="http://www.ibm.com/xmlns/prod/cics/bundle/EBABUNDLE" path="JMXSampleOSGIApp.ebabundle"/>
+</manifest>

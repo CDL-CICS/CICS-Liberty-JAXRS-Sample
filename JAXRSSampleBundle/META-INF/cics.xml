@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<manifest xmlns="http://www.ibm.com/xmlns/prod/cics/bundle" build="IntA-201404222146" bundleRelease="0" bundleVersion="1" bundleMicroVer="0" bundleMinorVer="0" bundleMajorVer="1" id="JAXRSSampleBundle">
+    <meta_directives>
+        <timestamp>2014-12-03T16:15:49.718+08:00</timestamp>
+    </meta_directives>
+    <define path="LIB01.jvmserver" type="http://www.ibm.com/xmlns/prod/cics/bundle/JVMSERVER" name="LIB01"/>
+    <define path="EXMPCAT.file" type="http://www.ibm.com/xmlns/prod/cics/bundle/FILE" name="EXMPCAT"/>
+    <define path="EXMPCONF.file" type="http://www.ibm.com/xmlns/prod/cics/bundle/FILE" name="EXMPCONF"/>
+    <define path="JAXRSSampleOSGIApp.ebabundle" type="http://www.ibm.com/xmlns/prod/cics/bundle/EBABUNDLE" name="JAXRSSampleOSGIApp"/>
+</manifest>
